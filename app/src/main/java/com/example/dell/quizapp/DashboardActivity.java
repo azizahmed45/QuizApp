@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -15,12 +16,16 @@ public class DashboardActivity extends AppCompatActivity {
     private Button signOutButton;
     private Button quizPracticeButton;
 
+    private TextView phoneNumberText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         mAuth = FirebaseAuth.getInstance();
+
+        phoneNumberText = findViewById(R.id.phoneNumberText);
 
         signOutButton = findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -31,6 +36,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
         checkLogin();
+
+        String phoneNumber = mAuth.getCurrentUser().getPhoneNumber();
+
+        phoneNumberText.setText(phoneNumber);
 
         quizPracticeButton = findViewById(R.id.quizPracticeButton);
         quizPracticeButton.setOnClickListener(new View.OnClickListener() {
