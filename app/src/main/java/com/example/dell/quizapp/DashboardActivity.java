@@ -32,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity {
         });
         checkLogin();
 
+        //This is test comment
+
 
         quizPracticeButton = findViewById(R.id.quizPracticeButton);
         quizPracticeButton.setOnClickListener(new View.OnClickListener() {
