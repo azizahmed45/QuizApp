@@ -34,6 +34,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         //This is test comment
         //Another test comments by aziz
+        //Another test comments by dedar
 
 
         quizPracticeButton = findViewById(R.id.quizPracticeButton);
