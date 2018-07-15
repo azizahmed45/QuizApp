@@ -30,7 +30,7 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
     private CollectionReference questionsRef;
 
     private boolean questionsLoaded = false;
-    private int nowOnQuestenNumber = 0;
+    private int nowOnQuestionNumberAt = 0;
 
     private ViewGroup questionView;
     private ProgressBar progressBar;
@@ -103,7 +103,7 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void startPractice() {
-        setQuestion(nowOnQuestenNumber);
+        setQuestion(nowOnQuestionNumberAt);
     }
 
     private void loadQuestions() {
@@ -140,21 +140,21 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void goNext() {
-        if (nowOnQuestenNumber == questions.size() - 1) {
-            nowOnQuestenNumber = 0;
+        if (nowOnQuestionNumberAt == questions.size() - 1) {
+            nowOnQuestionNumberAt = 0;
         } else {
-            nowOnQuestenNumber++;
+            nowOnQuestionNumberAt++;
         }
-        setQuestion(nowOnQuestenNumber);
+        setQuestion(nowOnQuestionNumberAt);
     }
 
     private void goPrevious() {
-        if (nowOnQuestenNumber == 0) {
-            nowOnQuestenNumber = questions.size() - 1;
+        if (nowOnQuestionNumberAt == 0) {
+            nowOnQuestionNumberAt = questions.size() - 1;
         } else {
-            nowOnQuestenNumber--;
+            nowOnQuestionNumberAt--;
         }
-        setQuestion(nowOnQuestenNumber);
+        setQuestion(nowOnQuestionNumberAt);
     }
 
 
