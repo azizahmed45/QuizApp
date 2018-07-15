@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.quizapp.quiz.Question;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizPracticeActivity extends AppCompatActivity {
+public class QuizPracticeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "QuizPracticeActivity";
 
@@ -28,6 +30,7 @@ public class QuizPracticeActivity extends AppCompatActivity {
     private CollectionReference questionsRef;
 
     private boolean questionsLoaded = false;
+    private int nowOnQuestenNumber = 0;
 
     private ViewGroup questionView;
     private ProgressBar progressBar;
@@ -38,6 +41,11 @@ public class QuizPracticeActivity extends AppCompatActivity {
     private TextView optionCText;
     private TextView optionDText;
 
+    private Button previousButton;
+    private Button wrongButton;
+    private Button bookmarkButton;
+    private Button nextButton;
+
     private List<Question> questions;
 
     @Override
@@ -45,14 +53,60 @@ public class QuizPracticeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_practice);
 
-        assignViews();
-        progressBar.setVisibility(View.VISIBLE);
-
         db = FirebaseFirestore.getInstance();
         questionsRef = db.collection("Questions");
 
         questions = new ArrayList<>();
 
+        assignViews();
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        loadQuestions();
+    }
+
+    private void assignViews() {
+        questionText = findViewById(R.id.question_text);
+        optionAText = findViewById(R.id.option_a_text);
+        optionBText = findViewById(R.id.option_b_text);
+        optionCText = findViewById(R.id.option_c_text);
+        optionDText = findViewById(R.id.option_d_text);
+
+        questionView = findViewById(R.id.questionView);
+        questionView.setVisibility(View.GONE);
+
+        progressBar = findViewById(R.id.questionLoadProgressbar);
+
+        previousButton = findViewById(R.id.previous_button);
+        previousButton.setOnClickListener(this);
+
+        wrongButton = findViewById(R.id.wrong_button);
+        wrongButton.setOnClickListener(this);
+
+        bookmarkButton = findViewById(R.id.bookmark_button);
+        bookmarkButton.setOnClickListener(this);
+
+        nextButton = findViewById(R.id.next_button);
+        nextButton.setOnClickListener(this);
+    }
+
+    private void setQuestion(int i) {
+        Question question = questions.get(i);
+
+        questionText.setText(question.getQuestion());
+        optionAText.setText(question.getOption_a());
+        optionBText.setText(question.getOption_b());
+        optionCText.setText(question.getOption_c());
+        optionDText.setText(question.getOption_d());
+
+        questionView.setVisibility(View.VISIBLE);
+    }
+
+    private void startPractice() {
+        setQuestion(nowOnQuestenNumber);
+    }
+
+    private void loadQuestions() {
         questionsRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -71,42 +125,50 @@ public class QuizPracticeActivity extends AppCompatActivity {
                                 Log.d("answer", question.getAnswer());
                             }
                             questionsLoaded = true;
-                            setQuestion();
                             progressBar.setVisibility(View.GONE);
-                            questionView.setVisibility(View.VISIBLE);
                             Log.d(TAG, "Successfully loaded questions");
+
+                            startPractice();
+
                         } else {
+                            Toast.makeText(QuizPracticeActivity.this, "Failed loading questions", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "Failed loading questions");
                         }
 
                     }
                 });
-
-
     }
 
-    private void assignViews() {
-        questionText = findViewById(R.id.question_text);
-        optionAText = findViewById(R.id.option_a_text);
-        optionBText = findViewById(R.id.option_b_text);
-        optionCText = findViewById(R.id.option_c_text);
-        optionDText = findViewById(R.id.option_d_text);
-
-        questionView = findViewById(R.id.questionView);
-        questionView.setVisibility(View.GONE);
-
-        progressBar = findViewById(R.id.questionLoadProgressbar);
+    private void goNext() {
+        if (nowOnQuestenNumber == questions.size() - 1) {
+            nowOnQuestenNumber = 0;
+        } else {
+            nowOnQuestenNumber++;
+        }
+        setQuestion(nowOnQuestenNumber);
     }
 
-    private void setQuestion() {
-        Question question = questions.get(0);
+    private void goPrevious() {
+        if (nowOnQuestenNumber == 0) {
+            nowOnQuestenNumber = questions.size() - 1;
+        } else {
+            nowOnQuestenNumber--;
+        }
+        setQuestion(nowOnQuestenNumber);
+    }
 
-        questionText.setText(question.getQuestion());
-        optionAText.setText(question.getOption_a());
-        optionBText.setText(question.getOption_b());
-        optionCText.setText(question.getOption_c());
-        optionDText.setText(question.getOption_d());
 
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.previous_button:
+                goPrevious();
+                break;
+            case R.id.next_button:
+                goNext();
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -224,24 +224,28 @@
         android:weightSum="4">
 
         <Button
+            android:id="@+id/previous_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/ic_previous_menu" />
 
         <Button
+            android:id="@+id/wrong_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/ic_wrong_menu" />
 
         <Button
+            android:id="@+id/bookmark_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/ic_bookmark_menu" />
 
         <Button
+            android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
