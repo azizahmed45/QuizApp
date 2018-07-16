@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".QuizPracticeActivity">
+    tools:context=".BaseQuestionPageActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavBar"
-        android:paddingHorizontal="10dp">
+        android:layout_above="@id/bottomNavBar">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -20,7 +19,7 @@
                 android:id="@+id/questionView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginVertical="10dp"
+                android:layout_margin="10dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -220,35 +219,73 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/primary"
+        android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <Button
+        <LinearLayout
             android:id="@+id/previous_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_previous_menu" />
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/wrong_button"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_previous" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/goto_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_wrong_menu" />
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center">
 
-        <Button
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_goto" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/bookmark_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_bookmark_menu" />
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center">
 
-        <Button
+            <ImageView
+                android:id="@+id/bookmark_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_bookmark" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_next_menu" />
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,15 +22,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizPracticeActivity extends AppCompatActivity implements View.OnClickListener {
+public class BaseQuestionPageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "QuizPracticeActivity";
+    private static final String TAG = "BaseQuestionPage";
 
     private FirebaseFirestore db;
     private CollectionReference questionsRef;
 
     private boolean questionsLoaded = false;
     private int nowOnQuestionNumberAt = 0;
+    private boolean bookmarked = false;
 
     private ViewGroup questionView;
     private ProgressBar progressBar;
@@ -41,31 +42,33 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
     private TextView optionCText;
     private TextView optionDText;
 
-    private Button previousButton;
-    private Button wrongButton;
-    private Button bookmarkButton;
-    private Button nextButton;
+    private ViewGroup previousButton;
+    private ViewGroup gotoButton;
+    private ViewGroup bookmarkButton;
+    private ViewGroup nextButton;
+
+    private ImageView bookmarkIcon;
 
     private List<Question> questions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz_practice);
+        setContentView(R.layout.activity_base_question_page);
 
         db = FirebaseFirestore.getInstance();
         questionsRef = db.collection("Questions");
 
         questions = new ArrayList<>();
 
-        assignViews();
+        initialize();
 
         progressBar.setVisibility(View.VISIBLE);
 
         loadQuestions();
     }
 
-    private void assignViews() {
+    private void initialize() {
         questionText = findViewById(R.id.question_text);
         optionAText = findViewById(R.id.option_a_text);
         optionBText = findViewById(R.id.option_b_text);
@@ -80,14 +83,16 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
         previousButton = findViewById(R.id.previous_button);
         previousButton.setOnClickListener(this);
 
-        wrongButton = findViewById(R.id.wrong_button);
-        wrongButton.setOnClickListener(this);
+        gotoButton = findViewById(R.id.goto_button);
+        gotoButton.setOnClickListener(this);
 
         bookmarkButton = findViewById(R.id.bookmark_button);
         bookmarkButton.setOnClickListener(this);
 
         nextButton = findViewById(R.id.next_button);
         nextButton.setOnClickListener(this);
+
+        bookmarkIcon = findViewById(R.id.bookmark_icon);
     }
 
     private void setQuestion(int i) {
@@ -131,7 +136,8 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
                             startPractice();
 
                         } else {
-                            Toast.makeText(QuizPracticeActivity.this, "Failed loading questions", Toast.LENGTH_SHORT).show();
+                            questionsLoaded = false;
+                            Toast.makeText(BaseQuestionPageActivity.this, "Failed loading questions", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "Failed loading questions");
                         }
 
@@ -157,18 +163,37 @@ public class QuizPracticeActivity extends AppCompatActivity implements View.OnCl
         setQuestion(nowOnQuestionNumberAt);
     }
 
+    private void bookmark() {
+        if (bookmarked) {
+            bookmarked = false;
+            bookmarkIcon.setImageResource(R.drawable.ic_bookmark);
+        } else {
+            bookmarked = true;
+            bookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
+        }
+    }
+
+    private void gotoAt() {
+
+    }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.previous_button:
-                goPrevious();
-                break;
-            case R.id.next_button:
-                goNext();
-                break;
-            default:
-                break;
+        if (questionsLoaded) {
+            switch (view.getId()) {
+                case R.id.previous_button:
+                    goPrevious();
+                    break;
+                case R.id.next_button:
+                    goNext();
+                    break;
+                case R.id.bookmark_button:
+                    bookmark();
+                case R.id.goto_button:
+                    gotoAt();
+                default:
+                    break;
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.example.dell.quizapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -45,15 +45,15 @@ public class DashboardActivity extends AppCompatActivity {
         quizPracticeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DashboardActivity.this, QuizPracticeActivity.class));
+                startActivity(new Intent(DashboardActivity.this, BaseQuestionPageActivity.class));
             }
         });
 
     }
 
-    private void checkLogin(){
-        if(mAuth.getCurrentUser() == null){
-            startActivity(new Intent(this, LoginActivity.class));
+    private void checkLogin() {
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, BaseQuestionPageActivity.class));
             finish();
         }
     }
