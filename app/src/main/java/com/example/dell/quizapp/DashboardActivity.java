@@ -53,7 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkLogin() {
         if (mAuth.getCurrentUser() == null) {
-            startActivity(new Intent(this, BaseQuestionPageActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
     }
