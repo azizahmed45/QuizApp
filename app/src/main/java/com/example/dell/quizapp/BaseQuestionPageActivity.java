@@ -1,11 +1,14 @@
 package com.example.dell.quizapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,6 +51,10 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     private ViewGroup nextButton;
 
     private ImageView bookmarkIcon;
+
+    private AlertDialog gotoDialog;
+
+    private EditText gotoEditText;
 
     private List<Question> questions;
 
@@ -174,6 +181,37 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     }
 
     private void gotoAt() {
+        if (gotoDialog == null) {
+            View dialogView = this.getLayoutInflater().inflate(R.layout.goto_dialog_layout, null);
+            gotoEditText = dialogView.findViewById(R.id.goto_number);
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setView(dialogView)
+                    .setTitle("Go to")
+                    .setPositiveButton(getString(R.string.go), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String numberString = gotoEditText.getText().toString();
+                            if (numberString.isEmpty()) {
+                                Toast.makeText(BaseQuestionPageActivity.this, "Did not enter a number.", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else if (Integer.parseInt(numberString) <= 0 || Integer.parseInt(numberString) > questions.size()) {
+                                Toast.makeText(BaseQuestionPageActivity.this, "Number must between 1-" + (questions.size()), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            setQuestion(Integer.parseInt(numberString) - 1);
+
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            gotoDialog.hide();
+                        }
+                    });
+            gotoDialog = dialogBuilder.create();
+        }
+        gotoDialog.show();
 
     }
 
@@ -189,8 +227,10 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                     break;
                 case R.id.bookmark_button:
                     bookmark();
+                    break;
                 case R.id.goto_button:
                     gotoAt();
+                    break;
                 default:
                     break;
             }
