@@ -6,5 +6,11 @@
     <string name="option_d">D</string>
     <string name="options">Options</string>
     <string name="question">Question</string>
-    <string name="exam">Exam</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="wrong_answer">Wrong answer</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="go">Go</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_number">Enter number</string>
 </resources>
