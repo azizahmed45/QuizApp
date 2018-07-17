@@ -7,4 +7,6 @@
     <string name="options">Options</string>
     <string name="question">Question</string>
     <string name="exam">Exam</string>
+    <string name="study">Study</string>
+    <string name="practice">Practice</string>
 </resources>
