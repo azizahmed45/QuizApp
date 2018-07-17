@@ -43,7 +43,7 @@ public class QuizPracticeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz_practice);
+        setContentView(R.layout.activity_base_question_page);
 
         assignViews();
         progressBar.setVisibility(View.VISIBLE);
