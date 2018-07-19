@@ -29,6 +29,13 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
     private static final String TAG = "BaseQuestionPage";
 
+    public static final String QUESTION_TYPE_KEY = "QUESTION_TYPE";
+    public static final int QUESTION_TYPE_STUDY = 1;
+    public static final int QUESTION_TYPE_PRACTICE = 2;
+    public static final int QUESTION_TYPE_EXAM = 3;
+
+    private int questionType;
+
     private FirebaseFirestore db;
     private CollectionReference questionsRef;
 
@@ -62,6 +69,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_question_page);
+
+        questionType = getIntent().getExtras().getInt(QUESTION_TYPE_KEY);
 
         db = FirebaseFirestore.getInstance();
         questionsRef = db.collection("Questions");
@@ -213,6 +222,19 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         }
         gotoDialog.show();
 
+    }
+
+    private void makeQuestionAs(int questionType) {
+        switch (questionType) {
+            case QUESTION_TYPE_STUDY:
+                break;
+            case QUESTION_TYPE_PRACTICE:
+                break;
+            case QUESTION_TYPE_EXAM:
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
