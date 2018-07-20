@@ -9,32 +9,6 @@
     android:weightSum="2"
     tools:context=".DashboardActivity">
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/phoneNumberText"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="38748374834"-->
-            <!--android:textSize="24sp" />-->
-
-        <!--<Button-->
-            <!--android:id="@+id/quizPracticeButton"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Quiz practice" />-->
-
-        <!--<Button-->
-            <!--android:id="@+id/signOutButton"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Sign Out" />-->
-    <!--</LinearLayout>-->
-
 
     <GridLayout
         android:id="@+id/dashboardGridView"
@@ -78,6 +52,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_practice"
             android:layout_width="0dp"
@@ -112,6 +87,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_exam"
             android:layout_width="0dp"
@@ -146,6 +122,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_questionbank"
             android:layout_width="0dp"
@@ -180,6 +157,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_score"
             android:layout_width="0dp"
@@ -214,6 +192,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_forum"
             android:layout_width="0dp"
