@@ -17,6 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DashboardActivity" />
+        <activity android:name=".StudyActivity" />
+        <activity android:name=".ChaptersActivity"></activity>
         <activity android:name=".BaseQuestionPageActivity" />
     </application>
 
