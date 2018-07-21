@@ -27,6 +27,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
 
     private ArrayList<String> subjectList;
     private ArrayList<String> subjectIds;
+    private ArrayList<Integer> subjectFieldIds;
 
     private FirebaseFirestore db;
 
@@ -53,6 +54,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
 
         subjectList = new ArrayList<>();
         subjectIds = new ArrayList<>();
+        subjectFieldIds = new ArrayList<>();
 
 
     }
@@ -79,6 +81,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 subjectList.add(documentSnapshot.getString("name"));
                                 subjectIds.add(documentSnapshot.getId());
+                                subjectFieldIds.add(documentSnapshot.getLong("id").intValue());
                                 Log.d("Subjects: ", documentSnapshot.getString("name"));
                             }
 
@@ -95,6 +98,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
     public void onItemClick(int position) {
         Intent intent = new Intent(StudyActivity.this, ChaptersActivity.class);
         intent.putExtra("subjectId", subjectIds.get(position));
+        intent.putExtra("subjectFieldId", subjectFieldIds.get(position));
 
         startActivity(intent);
     }

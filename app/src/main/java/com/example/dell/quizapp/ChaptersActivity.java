@@ -1,5 +1,6 @@
 package com.example.dell.quizapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ChaptersActivity extends AppCompatActivity {
+public class ChaptersActivity extends AppCompatActivity implements ChapterListAdapter.OnItemClickListener {
 
     private FirebaseFirestore db;
 
@@ -28,6 +29,7 @@ public class ChaptersActivity extends AppCompatActivity {
     private ArrayList<String> chapterNames;
 
     private String subjectId;
+    private int subjectFiledId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,4 +88,13 @@ public class ChaptersActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(ChaptersActivity.this, QuizPracticeActivity.class);
+        intent.putExtra("subjectId", subjectFiledId);
+        intent.putExtra("chapterId", chapterNumbers.get(position));
+        intent.putExtra("questionType", "study");
+
+        startActivity(intent);
+    }
 }
