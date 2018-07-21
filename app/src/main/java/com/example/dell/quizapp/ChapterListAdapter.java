@@ -120,16 +120,21 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
         private TextView chapterNumber;
         private TextView chapterName;
 
-        public ChapterViewHolder(View itemView, OnItemClickListener listener) {
+        public ChapterViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
 
             chapterNumber = itemView.findViewById(R.id.chapter_number);
             chapterName = itemView.findViewById(R.id.chapter_name);
 
-            if (listener != null) {
-                int position = getAdapterPosition();
-                listener.onItemClick(position);
-            }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        listener.onItemClick(position);
+                    }
+                }
+            });
         }
     }
 

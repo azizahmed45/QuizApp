@@ -34,7 +34,12 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     public static final int QUESTION_TYPE_PRACTICE = 2;
     public static final int QUESTION_TYPE_EXAM = 3;
 
+    public static final String SUBJECT_ID_KEY = "SUBJECT_ID";
+    public static final String CHAPTER_ID_KEY = "CHAPTER_ID";
+
     private int questionType;
+    private int subjectId;
+    private int chapterId;
 
     private FirebaseFirestore db;
     private CollectionReference questionsRef;
@@ -69,8 +74,6 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_question_page);
-
-        questionType = getIntent().getExtras().getInt(QUESTION_TYPE_KEY);
 
         db = FirebaseFirestore.getInstance();
         questionsRef = db.collection("Questions");
@@ -109,6 +112,17 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         nextButton.setOnClickListener(this);
 
         bookmarkIcon = findViewById(R.id.bookmark_icon);
+
+        getIntentExtras();
+    }
+
+    private void getIntentExtras() {
+        questionType = getIntent().getExtras().getInt(QUESTION_TYPE_KEY);
+
+        if (questionType == QUESTION_TYPE_STUDY) {
+            subjectId = getIntent().getExtras().getInt(SUBJECT_ID_KEY);
+            chapterId = getIntent().getExtras().getInt(CHAPTER_ID_KEY);
+        }
     }
 
     private void setQuestion(int i) {
@@ -121,44 +135,61 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         optionDText.setText(question.getOption_d());
 
         questionView.setVisibility(View.VISIBLE);
+
+        if (questionType == QUESTION_TYPE_STUDY) {
+            setAnswer();
+        }
     }
 
     private void startPractice() {
-        setQuestion(nowOnQuestionNumberAt);
+        if (questions.size() > 0) {
+            setQuestion(nowOnQuestionNumberAt);
+            makeQuestionPageAs(questionType);
+        } else {
+            Toast.makeText(this, "No questions found.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadQuestions() {
-        questionsRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+        Log.d("SubjectId:", subjectId + "");
+        Log.d("ChapterId:", chapterId + "");
 
-                                Question question = documentSnapshot.toObject(Question.class);
-                                questions.add(question);
+        if (questionType == QUESTION_TYPE_STUDY) {
+            questionsRef.whereEqualTo("subjectId", subjectId)
+                    .whereEqualTo("chapterId", chapterId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 
-                                Log.d("question", question.getQuestion());
-                                Log.d("option a", question.getOption_a());
-                                Log.d("option b", question.getOption_b());
-                                Log.d("option c", question.getOption_c());
-                                Log.d("option d", question.getOption_d());
-                                Log.d("answer", question.getAnswer());
+                                    Question question = documentSnapshot.toObject(Question.class);
+                                    questions.add(question);
+
+                                    Log.d("question", question.getQuestion());
+                                    Log.d("option a", question.getOption_a());
+                                    Log.d("option b", question.getOption_b());
+                                    Log.d("option c", question.getOption_c());
+                                    Log.d("option d", question.getOption_d());
+                                    Log.d("answer", question.getAnswer());
+                                }
+                                questionsLoaded = true;
+                                progressBar.setVisibility(View.GONE);
+                                Log.d(TAG, "Successfully loaded questions");
+
+                                startPractice();
+
+                            } else {
+                                questionsLoaded = false;
+                                Toast.makeText(BaseQuestionPageActivity.this, "Failed loading questions", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Failed loading questions");
                             }
-                            questionsLoaded = true;
-                            progressBar.setVisibility(View.GONE);
-                            Log.d(TAG, "Successfully loaded questions");
 
-                            startPractice();
-
-                        } else {
-                            questionsLoaded = false;
-                            Toast.makeText(BaseQuestionPageActivity.this, "Failed loading questions", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Failed loading questions");
                         }
+                    });
+        }
 
-                    }
-                });
     }
 
     private void goNext() {
@@ -215,7 +246,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                     .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            gotoDialog.hide();
+                            gotoDialog.dismiss();
                         }
                     });
             gotoDialog = dialogBuilder.create();
@@ -224,7 +255,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
     }
 
-    private void makeQuestionAs(int questionType) {
+    private void makeQuestionPageAs(int questionType) {
         switch (questionType) {
             case QUESTION_TYPE_STUDY:
                 break;
@@ -234,6 +265,20 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 break;
             default:
                 break;
+        }
+    }
+
+
+    private void setAnswer() {
+        String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
+        if (answer.equals("option_a")) {
+            optionAText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+        } else if (answer.equals("option_b")) {
+            optionBText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+        } else if (answer.equals("option_c")) {
+            optionCText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+        } else if (answer.equals("option_d")) {
+            optionDText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
         }
     }
 

@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,11 +28,13 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     private RecyclerView.LayoutManager layoutManager;
     private ChapterListAdapter adapter;
 
+    private ProgressBar progressBar;
+
     private ArrayList<Integer> chapterNumbers;
     private ArrayList<String> chapterNames;
 
     private String subjectId;
-    private int subjectFiledId;
+    private int subjectFieldId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,8 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     private void initialize() {
         db = FirebaseFirestore.getInstance();
 
-        subjectId = getIntent().getStringExtra("subjectId");
+        subjectId = getIntent().getExtras().getString("subjectId");
+        subjectFieldId = getIntent().getExtras().getInt("subjectFieldId");
 
         chapterNumbers = new ArrayList<>();
         chapterNames = new ArrayList<>();
@@ -53,14 +59,22 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
 
         layoutManager = new LinearLayoutManager(this);
 
-
+        progressBar = findViewById(R.id.chapter_progress);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void setChapters() {
         adapter = new ChapterListAdapter(chapterNumbers, chapterNames);
+        adapter.setOnItemClickListener(this);
 
-        chaptersRecycleView.setAdapter(adapter);
         chaptersRecycleView.setLayoutManager(layoutManager);
+        chaptersRecycleView.setAdapter(adapter);
+
+        progressBar.setVisibility(View.GONE);
+
+        if (chapterNumbers.size() <= 0) {
+            Toast.makeText(this, "No chapters found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getChapters() {
@@ -90,10 +104,10 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(ChaptersActivity.this, QuizPracticeActivity.class);
-        intent.putExtra("subjectId", subjectFiledId);
-        intent.putExtra("chapterId", chapterNumbers.get(position));
-        intent.putExtra("questionType", "study");
+        Intent intent = new Intent(ChaptersActivity.this, BaseQuestionPageActivity.class);
+        intent.putExtra(BaseQuestionPageActivity.SUBJECT_ID_KEY, subjectFieldId);
+        intent.putExtra(BaseQuestionPageActivity.CHAPTER_ID_KEY, chapterNumbers.get(position));
+        intent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_STUDY);
 
         startActivity(intent);
     }

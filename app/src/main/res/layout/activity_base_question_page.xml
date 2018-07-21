@@ -68,6 +68,7 @@
                         android:paddingTop="25dp">
 
                         <RelativeLayout
+                            android:id="@+id/option_a"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
@@ -98,6 +99,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/option_b"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
@@ -128,6 +130,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/option_c"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
@@ -158,6 +161,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/option_d"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
