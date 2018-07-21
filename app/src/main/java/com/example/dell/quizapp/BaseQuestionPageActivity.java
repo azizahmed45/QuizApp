@@ -273,11 +273,29 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
         if (answer.equals("option_a")) {
             optionAText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+
+            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
         } else if (answer.equals("option_b")) {
+            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+
             optionBText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+
+            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
         } else if (answer.equals("option_c")) {
+            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+
             optionCText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+
+            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
         } else if (answer.equals("option_d")) {
+            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+
             optionDText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
         }
     }
