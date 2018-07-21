@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -57,6 +56,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         forumCardView.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -77,4 +77,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
+
+    private void checkLogin() {
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 }
