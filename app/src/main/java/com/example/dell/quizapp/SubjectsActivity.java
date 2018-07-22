@@ -19,11 +19,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class StudyActivity extends AppCompatActivity implements SubjectListAdapter.OnItemClickListener {
+public class SubjectsActivity extends AppCompatActivity implements SubjectListAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SubjectListAdapter adapter;
+
+    private String title;
 
     private ArrayList<String> subjectList;
     private ArrayList<String> subjectIds;
@@ -56,6 +58,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
         subjectIds = new ArrayList<>();
         subjectFieldIds = new ArrayList<>();
 
+        title = getIntent().getExtras().getString(DashboardActivity.INTENT_TITLE_TAG);
 
     }
 
@@ -74,7 +77,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
         db.collection("Subjects")
                 .orderBy("id", Query.Direction.ASCENDING)
                 .get()
-                .addOnCompleteListener(StudyActivity.this, new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(SubjectsActivity.this, new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -96,7 +99,7 @@ public class StudyActivity extends AppCompatActivity implements SubjectListAdapt
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(StudyActivity.this, ChaptersActivity.class);
+        Intent intent = new Intent(SubjectsActivity.this, ChaptersActivity.class);
         intent.putExtra("subjectId", subjectIds.get(position));
         intent.putExtra("subjectFieldId", subjectFieldIds.get(position));
 

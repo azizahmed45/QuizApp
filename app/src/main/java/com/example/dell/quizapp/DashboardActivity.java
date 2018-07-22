@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static String INTENT_TITLE_TAG = "title";
+
     private FirebaseAuth mAuth;
 
     private CardView studyCardView;
@@ -62,9 +64,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cardview_study:
-                startActivity(new Intent(this, StudyActivity.class));
+                Intent studyIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
+                studyIntent.putExtra(INTENT_TITLE_TAG, "Study");
+                startActivity(studyIntent);
                 break;
             case R.id.cardview_practice:
+                Intent practiceIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
+                practiceIntent.putExtra(INTENT_TITLE_TAG, "Practice");
+                startActivity(practiceIntent);
                 break;
             case R.id.cardview_exam:
                 break;
