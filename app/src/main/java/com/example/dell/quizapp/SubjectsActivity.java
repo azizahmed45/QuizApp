@@ -27,6 +27,8 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
 
     private String title;
 
+    private int questionType;
+
     private ArrayList<String> subjectList;
     private ArrayList<String> subjectIds;
     private ArrayList<Integer> subjectFieldIds;
@@ -59,6 +61,8 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
         subjectFieldIds = new ArrayList<>();
 
         title = getIntent().getExtras().getString(DashboardActivity.INTENT_TITLE_TAG);
+
+        questionType = getIntent().getExtras().getInt(BaseQuestionPageActivity.QUESTION_TYPE_KEY);
 
     }
 
@@ -102,6 +106,13 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
         Intent intent = new Intent(SubjectsActivity.this, ChaptersActivity.class);
         intent.putExtra("subjectId", subjectIds.get(position));
         intent.putExtra("subjectFieldId", subjectFieldIds.get(position));
+        intent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, questionType);
+
+        if (questionType == BaseQuestionPageActivity.QUESTION_TYPE_STUDY) {
+            intent.putExtra(DashboardActivity.INTENT_TITLE_TAG, "Study");
+        } else if (questionType == BaseQuestionPageActivity.QUESTION_TYPE_PRACTICE) {
+            intent.putExtra(DashboardActivity.INTENT_TITLE_TAG, "Practice");
+        }
 
         startActivity(intent);
     }

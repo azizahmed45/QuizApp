@@ -33,6 +33,8 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     private ArrayList<Integer> chapterNumbers;
     private ArrayList<String> chapterNames;
 
+    private int questionType;
+
     private String subjectId;
     private int subjectFieldId;
 
@@ -61,6 +63,8 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
 
         progressBar = findViewById(R.id.chapter_progress);
         progressBar.setVisibility(View.VISIBLE);
+
+        questionType = getIntent().getExtras().getInt(BaseQuestionPageActivity.QUESTION_TYPE_KEY);
     }
 
     private void setChapters() {
@@ -107,7 +111,7 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
         Intent intent = new Intent(ChaptersActivity.this, BaseQuestionPageActivity.class);
         intent.putExtra(BaseQuestionPageActivity.SUBJECT_ID_KEY, subjectFieldId);
         intent.putExtra(BaseQuestionPageActivity.CHAPTER_ID_KEY, chapterNumbers.get(position));
-        intent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_STUDY);
+        intent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, questionType);
 
         startActivity(intent);
     }

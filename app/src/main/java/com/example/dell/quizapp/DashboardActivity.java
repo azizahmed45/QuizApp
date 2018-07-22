@@ -66,11 +66,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             case R.id.cardview_study:
                 Intent studyIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
                 studyIntent.putExtra(INTENT_TITLE_TAG, "Study");
+                studyIntent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_STUDY);
                 startActivity(studyIntent);
                 break;
             case R.id.cardview_practice:
                 Intent practiceIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
                 practiceIntent.putExtra(INTENT_TITLE_TAG, "Practice");
+                practiceIntent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_PRACTICE);
                 startActivity(practiceIntent);
                 break;
             case R.id.cardview_exam:

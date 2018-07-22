@@ -2,6 +2,7 @@ package com.example.dell.quizapp;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -119,7 +120,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     private void getIntentExtras() {
         questionType = getIntent().getExtras().getInt(QUESTION_TYPE_KEY);
 
-        if (questionType == QUESTION_TYPE_STUDY) {
+        if (questionType == QUESTION_TYPE_STUDY || questionType == QUESTION_TYPE_PRACTICE) {
             subjectId = getIntent().getExtras().getInt(SUBJECT_ID_KEY);
             chapterId = getIntent().getExtras().getInt(CHAPTER_ID_KEY);
         }
@@ -134,11 +135,16 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         optionCText.setText(question.getOption_c());
         optionDText.setText(question.getOption_d());
 
-        questionView.setVisibility(View.VISIBLE);
+        optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
 
         if (questionType == QUESTION_TYPE_STUDY) {
             setAnswer();
         }
+
+        questionView.setVisibility(View.VISIBLE);
     }
 
     private void startPractice() {
@@ -154,7 +160,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         Log.d("SubjectId:", subjectId + "");
         Log.d("ChapterId:", chapterId + "");
 
-        if (questionType == QUESTION_TYPE_STUDY) {
+        if (questionType == QUESTION_TYPE_STUDY || questionType == QUESTION_TYPE_PRACTICE) {
             questionsRef.whereEqualTo("subjectId", subjectId)
                     .whereEqualTo("chapterId", chapterId)
                     .get()
@@ -166,13 +172,6 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
                                     Question question = documentSnapshot.toObject(Question.class);
                                     questions.add(question);
-
-                                    Log.d("question", question.getQuestion());
-                                    Log.d("option a", question.getOption_a());
-                                    Log.d("option b", question.getOption_b());
-                                    Log.d("option c", question.getOption_c());
-                                    Log.d("option d", question.getOption_d());
-                                    Log.d("answer", question.getAnswer());
                                 }
                                 questionsLoaded = true;
                                 progressBar.setVisibility(View.GONE);
@@ -258,8 +257,10 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     private void makeQuestionPageAs(int questionType) {
         switch (questionType) {
             case QUESTION_TYPE_STUDY:
+                setAnswer();
                 break;
             case QUESTION_TYPE_PRACTICE:
+                setClickListenerOnOptions();
                 break;
             case QUESTION_TYPE_EXAM:
                 break;
@@ -268,40 +269,36 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         }
     }
 
+    private void setClickListenerOnOptions() {
+        optionAText.setOnClickListener(this);
+        optionBText.setOnClickListener(this);
+        optionCText.setOnClickListener(this);
+        optionDText.setOnClickListener(this);
+    }
 
     private void setAnswer() {
         String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
+        getAnswerView(answer).setBackground(getResources().getDrawable(R.drawable.fill_color_shape_green));
+    }
+
+    private View getAnswerView(String answer) {
         if (answer.equals("option_a")) {
-            optionAText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
-
-            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            return optionAText;
         } else if (answer.equals("option_b")) {
-            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-
-            optionBText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
-
-            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            return optionBText;
         } else if (answer.equals("option_c")) {
-            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-
-            optionCText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
-
-            optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            return optionCText;
         } else if (answer.equals("option_d")) {
-            optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-            optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+            return optionDText;
+        } else {
+            Log.d("Question page: ", " Problem in answer");
 
-            optionDText.setBackground(getResources().getDrawable(R.drawable.fill_color_shape));
+            return new View(this);
         }
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         if (questionsLoaded) {
             switch (view.getId()) {
                 case R.id.previous_button:
@@ -319,6 +316,32 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 default:
                     break;
             }
+        }
+
+        if (questionType == QUESTION_TYPE_PRACTICE &&
+                (view == optionAText || view == optionBText || view == optionCText || view == optionDText)) {
+
+            String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
+
+            if (view == getAnswerView(answer)) {
+                setAnswer();
+            } else if (view != getAnswerView(answer)) {
+                view.setBackground(getResources().getDrawable(R.drawable.fill_color_shape_red));
+                new CountDownTimer(500, 100) {
+
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        view.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+                        setAnswer();
+                    }
+                }.start();
+            }
+
         }
     }
 }
