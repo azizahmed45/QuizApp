@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static String INTENT_TITLE_TAG = "title";
 
     private FirebaseAuth mAuth;
 
@@ -61,9 +64,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cardview_study:
-                startActivity(new Intent(this, StudyActivity.class));
+                Intent studyIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
+                studyIntent.putExtra(INTENT_TITLE_TAG, "Study");
+                startActivity(studyIntent);
                 break;
             case R.id.cardview_practice:
+                Intent practiceIntent = new Intent(DashboardActivity.this, SubjectsActivity.class);
+                practiceIntent.putExtra(INTENT_TITLE_TAG, "Practice");
+                startActivity(practiceIntent);
                 break;
             case R.id.cardview_exam:
                 break;
@@ -78,9 +86,4 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void checkLogin() {
-        if (mAuth.getCurrentUser() == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
 }
