@@ -38,12 +38,15 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     private String subjectId;
     private int subjectFieldId;
 
+    private String title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapters);
 
         initialize();
+        setActionBar();
         getChapters();
 
     }
@@ -65,6 +68,8 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
         progressBar.setVisibility(View.VISIBLE);
 
         questionType = getIntent().getExtras().getInt(BaseQuestionPageActivity.QUESTION_TYPE_KEY);
+
+        title = getIntent().getExtras().getString(DashboardActivity.INTENT_TITLE_TAG);
     }
 
     private void setChapters() {
@@ -114,5 +119,15 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
         intent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, questionType);
 
         startActivity(intent);
+    }
+
+    private void setActionBar() {
+        CustomActionBar actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Chapters");
+        actionBar.setUpButtonListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }

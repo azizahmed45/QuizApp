@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="color" value="ffffff" />
                             <entry key="height" value="36" />
-                            <entry key="outputName" value="ic_correct" />
+                            <entry key="outputName" value="ic_submit" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\Dell" />
                             <entry key="width" value="36" />

@@ -40,9 +40,10 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_study);
+        setContentView(R.layout.activity_subjects);
 
         initialize();
+        setActionBar();
         getSubjects();
     }
 
@@ -115,5 +116,15 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
         }
 
         startActivity(intent);
+    }
+
+    private void setActionBar() {
+        CustomActionBar actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Subjects");
+        actionBar.setUpButtonListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
