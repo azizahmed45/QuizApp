@@ -7,12 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.quizapp.quiz.Question;
@@ -26,7 +26,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseQuestionPageActivity extends AppCompatActivity implements View.OnClickListener {
+import io.github.kexanie.library.MathView;
+
+public class BaseQuestionPageActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
     private static final String TAG = "BaseQuestionPage";
 
@@ -52,11 +54,11 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     private ViewGroup questionView;
     private ProgressBar progressBar;
 
-    private TextView questionText;
-    private TextView optionAText;
-    private TextView optionBText;
-    private TextView optionCText;
-    private TextView optionDText;
+    private static final int CLICK_ACTION_THRESHOLD = 200;
+    private MathView questionText;
+    private MathView optionAText;
+    private MathView optionBText;
+    private MathView optionCText;
 
     private ViewGroup previousButton;
     private ViewGroup gotoButton;
@@ -126,26 +128,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         }
     }
 
-    private void setQuestion(int i) {
-        Question question = questions.get(i);
-
-        questionText.setText(question.getQuestion());
-        optionAText.setText(question.getOption_a());
-        optionBText.setText(question.getOption_b());
-        optionCText.setText(question.getOption_c());
-        optionDText.setText(question.getOption_d());
-
-        optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-        optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-        optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-        optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-
-        if (questionType == QUESTION_TYPE_STUDY) {
-            setAnswer();
-        }
-
-        questionView.setVisibility(View.VISIBLE);
-    }
+    private MathView optionDText;
 
     private void startPractice() {
         if (questions.size() > 0) {
@@ -269,12 +252,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         }
     }
 
-    private void setClickListenerOnOptions() {
-        optionAText.setOnClickListener(this);
-        optionBText.setOnClickListener(this);
-        optionCText.setOnClickListener(this);
-        optionDText.setOnClickListener(this);
-    }
+    //ClickEvents on touch (WebView)
+    private long lastTouchDown;
 
     private void setAnswer() {
         String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
@@ -297,6 +276,35 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         }
     }
 
+    private void setQuestion(int i) {
+        Question question = questions.get(i);
+
+        questionText.setText(questionFormat(question.getQuestion()));
+        optionAText.setText(optionFormat(question.getOption_a()));
+        optionBText.setText(optionFormat(question.getOption_b()));
+        optionCText.setText(optionFormat(question.getOption_c()));
+        optionDText.setText(optionFormat(question.getOption_d()));
+
+        //reset borders
+        optionAText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionBText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+        optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+
+        if (questionType == QUESTION_TYPE_STUDY) {
+            setAnswer();
+        }
+
+        questionView.setVisibility(View.VISIBLE);
+    }
+
+    private void setClickListenerOnOptions() {
+        optionAText.setOnTouchListener(this);
+        optionBText.setOnTouchListener(this);
+        optionCText.setOnTouchListener(this);
+        optionDText.setOnTouchListener(this);
+    }
+
     @Override
     public void onClick(final View view) {
         if (questionsLoaded) {
@@ -317,31 +325,70 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                     break;
             }
         }
+    }
 
-        if (questionType == QUESTION_TYPE_PRACTICE &&
-                (view == optionAText || view == optionBText || view == optionCText || view == optionDText)) {
+    private String optionFormat(String s) {
+        return "<div class=\"box\" style = \"                  \n" +
+                "  border : 3px solid green;\n" +
+                "  border-radius: 10px;\">\n" +
+                "  <p style=\"\n" +
+                "     margin-top: 2px;\n" +
+                "     margin-bottom: 2px;\n" +
+                "     margin-left: 30px;\n" +
+                "     color:black;\n" +
+                "     font-size: 20px\">" + s + "</p> \n" +
+                "</div>";
+    }
 
-            String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
+    private String questionFormat(String s) {
+        return "<div class=\"box\" style = \"                  \n" +
+                "  border : 3px solid green;\n" +
+                "  border-radius: 10px;\">\n" +
+                "  <p style=\"\n" +
+                "     margin-top: 30px;\n" +
+                "     margin-bottom: 2px;\n" +
+                "     margin-left: 10px;\n" +
+                "     color:black;\n" +
+                "     font-size: 20px\">" + s + "</p> \n" +
+                "</div>";
+    }
 
-            if (view == getAnswerView(answer)) {
-                setAnswer();
-            } else if (view != getAnswerView(answer)) {
-                view.setBackground(getResources().getDrawable(R.drawable.fill_color_shape_red));
-                new CountDownTimer(500, 100) {
+    @Override
+    public boolean onTouch(final View view, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                lastTouchDown = System.currentTimeMillis();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHOLD) {
+                    if (questionType == QUESTION_TYPE_PRACTICE &&
+                            (view == optionAText || view == optionBText || view == optionCText || view == optionDText)) {
 
-                    @Override
-                    public void onTick(long l) {
+                        String answer = questions.get(nowOnQuestionNumberAt).getAnswer();
+
+                        if (view == getAnswerView(answer)) {
+                            setAnswer();
+                        } else if (view != getAnswerView(answer)) {
+                            view.setBackground(getResources().getDrawable(R.drawable.fill_color_shape_red));
+                            new CountDownTimer(500, 100) {
+
+                                @Override
+                                public void onTick(long l) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    view.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
+                                    setAnswer();
+                                }
+                            }.start();
+                        }
 
                     }
-
-                    @Override
-                    public void onFinish() {
-                        view.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
-                        setAnswer();
-                    }
-                }.start();
-            }
-
+                }
+                break;
         }
+        return true;
     }
 }

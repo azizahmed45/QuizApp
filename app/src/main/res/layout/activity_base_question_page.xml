@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp">
 
-                    <TextView
+                    <io.github.kexanie.library.MathView
                         android:id="@+id/question_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
 
-                            <TextView
+                            <io.github.kexanie.library.MathView
                                 android:id="@+id/option_a_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
 
-                            <TextView
+                            <io.github.kexanie.library.MathView
                                 android:id="@+id/option_b_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
 
-                            <TextView
+                            <io.github.kexanie.library.MathView
                                 android:id="@+id/option_c_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
                             android:layout_height="wrap_content"
                             android:paddingVertical="10dp">
 
-                            <TextView
+                            <io.github.kexanie.library.MathView
                                 android:id="@+id/option_d_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
