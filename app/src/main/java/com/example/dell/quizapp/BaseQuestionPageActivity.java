@@ -224,7 +224,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                                 Toast.makeText(BaseQuestionPageActivity.this, "Number must between 1-" + (questions.size()), Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            setQuestion(Integer.parseInt(numberString) - 1);
+                            nowOnQuestionNumberAt = Integer.parseInt(numberString) - 1;
+                            setQuestion(nowOnQuestionNumberAt);
 
                         }
                     })
