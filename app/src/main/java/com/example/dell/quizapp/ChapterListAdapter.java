@@ -101,6 +101,36 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
             case 20:
                 chapterNumber = "২০তম";
                 break;
+            case 21:
+                chapterNumber = "২১তম";
+                break;
+            case 22:
+                chapterNumber = "২২তম";
+                break;
+            case 23:
+                chapterNumber = "২৩তম";
+                break;
+            case 24:
+                chapterNumber = "২৪তম";
+                break;
+            case 25:
+                chapterNumber = "২৫তম";
+                break;
+            case 26:
+                chapterNumber = "২৬তম";
+                break;
+            case 27:
+                chapterNumber = "২৭তম";
+                break;
+            case 28:
+                chapterNumber = "২৮তম";
+                break;
+            case 29:
+                chapterNumber = "২৯তম";
+                break;
+            case 30:
+                chapterNumber = "৩০তম";
+                break;
             default:
                 chapterNumber = number + " তম";
         }
