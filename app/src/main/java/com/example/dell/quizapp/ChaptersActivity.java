@@ -28,6 +28,8 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     private RecyclerView.LayoutManager layoutManager;
     private ChapterListAdapter adapter;
 
+    private CustomActionBar actionBar;
+
     private ProgressBar progressBar;
 
     private ArrayList<Integer> chapterNumbers;
@@ -122,7 +124,7 @@ public class ChaptersActivity extends AppCompatActivity implements ChapterListAd
     }
 
     private void setActionBar() {
-        CustomActionBar actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Chapters");
+        actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Chapters");
         actionBar.setUpButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

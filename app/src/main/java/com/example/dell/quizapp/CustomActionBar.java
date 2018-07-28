@@ -78,6 +78,12 @@ public class CustomActionBar {
         return this;
     }
 
+    public CustomActionBar setTitle(String title) {
+        this.title = title;
+        titleView.setText(this.title);
+        return this;
+    }
+
     public View getView() {
         return view;
     }

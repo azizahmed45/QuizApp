@@ -25,6 +25,8 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
     private RecyclerView.LayoutManager layoutManager;
     private SubjectListAdapter adapter;
 
+    private CustomActionBar actionBar;
+
     private String title;
 
     private int questionType;
@@ -119,7 +121,7 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
     }
 
     private void setActionBar() {
-        CustomActionBar actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Subjects");
+        actionBar = new CustomActionBar(this, getSupportActionBar(), title, "Subjects");
         actionBar.setUpButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

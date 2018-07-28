@@ -65,6 +65,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     private ViewGroup bookmarkButton;
     private ViewGroup nextButton;
 
+    private CustomActionBar actionBar;
+
     private ImageView bookmarkIcon;
 
     private AlertDialog gotoDialog;
@@ -132,6 +134,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
     private void startPractice() {
         if (questions.size() > 0) {
+            setActionBar();
             setQuestion(nowOnQuestionNumberAt);
             makeQuestionPageAs(questionType);
         } else {
@@ -291,6 +294,9 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         optionCText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
         optionDText.setBackground(getResources().getDrawable(R.drawable.rounded_border_shape));
 
+        //Change question number title
+        actionBar.setTitle(nowOnQuestionNumberAt + 1 + "/" + questions.size());
+
         if (questionType == QUESTION_TYPE_STUDY) {
             setAnswer();
         }
@@ -390,5 +396,15 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 break;
         }
         return true;
+    }
+
+    private void setActionBar() {
+        actionBar = new CustomActionBar(this, getSupportActionBar(), nowOnQuestionNumberAt + "/" + questions.size(), "Testing");
+        actionBar.setUpButtonListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
