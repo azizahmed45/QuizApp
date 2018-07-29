@@ -1,6 +1,9 @@
 package com.example.dell.quizapp.quiz;
 
-public class Question {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Question implements Parcelable {
 
     private String question;
     private String option_a;
@@ -20,6 +23,27 @@ public class Question {
         this.option_c = option_c;
         this.option_d = option_d;
         this.answer = answer;
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
+    protected Question(Parcel in) {
+        question = in.readString();
+        option_a = in.readString();
+        option_b = in.readString();
+        option_c = in.readString();
+        option_d = in.readString();
+        answer = in.readString();
     }
 
     public String getQuestion() {
@@ -68,5 +92,35 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(question);
+        parcel.writeString(option_a);
+        parcel.writeString(option_b);
+        parcel.writeString(option_c);
+        parcel.writeString(option_d);
+        parcel.writeString(answer);
+    }
+
+    public String getActualAnswer() {
+        if (answer.equals("option_a")) {
+            return option_a;
+        } else if (answer.equals("option_b")) {
+            return option_b;
+        } else if (answer.equals("option_c")) {
+            return option_c;
+        } else if (answer.equals("option_d")) {
+            return option_d;
+        } else {
+            return "Unknown error in answer";
+        }
+
     }
 }

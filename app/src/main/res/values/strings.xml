@@ -16,4 +16,5 @@
     <string name="exam">Exam</string>
     <string name="study">Study</string>
     <string name="practice">Practice</string>
+    <string name="answer">Answer</string>
 </resources>
