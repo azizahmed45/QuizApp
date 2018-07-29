@@ -6,6 +6,7 @@
     android:background="@drawable/rounded_border_shape"
     android:orientation="vertical"
     android:padding="16dp"
+    android:layout_marginVertical="8dp"
     tools:context=".ResultActivity">
 
     <RelativeLayout
