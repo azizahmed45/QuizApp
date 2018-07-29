@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.dell.quizapp.database.DatabaseHelper;
 import com.example.dell.quizapp.quiz.Question;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -128,6 +129,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
             subjectId = getIntent().getExtras().getInt(SUBJECT_ID_KEY);
             chapterId = getIntent().getExtras().getInt(CHAPTER_ID_KEY);
         }
+
     }
 
     private MathView optionDText;
@@ -171,6 +173,20 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                                 Log.d(TAG, "Failed loading questions");
                             }
 
+                        }
+                    });
+        } else if (questionType == QUESTION_TYPE_EXAM) {
+            DatabaseHelper dbHelp = new DatabaseHelper();
+            dbHelp.makeQuestions(DatabaseHelper.EXAM_QUESTION)
+                    .setOnCompleteListener(new DatabaseHelper.OnCompleteListener() {
+                        @Override
+                        public void onComplete(ArrayList<Question> q) {
+                            questions = q;
+                            questionsLoaded = true;
+                            progressBar.setVisibility(View.GONE);
+                            Log.d(TAG, "Successfully loaded questions");
+
+                            startPractice();
                         }
                     });
         }
@@ -250,6 +266,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 setClickListenerOnOptions();
                 break;
             case QUESTION_TYPE_EXAM:
+                Log.d(TAG, "makeQuestionPageAs: exam");
                 break;
             default:
                 break;

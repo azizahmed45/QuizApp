@@ -76,6 +76,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 startActivity(practiceIntent);
                 break;
             case R.id.cardview_exam:
+                Intent examIntent = new Intent(this, BaseQuestionPageActivity.class);
+                examIntent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_EXAM);
+                startActivity(examIntent);
                 break;
             case R.id.cardview_questionbank:
                 break;
