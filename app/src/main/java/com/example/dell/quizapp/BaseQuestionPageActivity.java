@@ -266,6 +266,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 setClickListenerOnOptions();
                 break;
             case QUESTION_TYPE_EXAM:
+                actionBar.setAsExam()
+                        .setTimer(60);
                 Log.d(TAG, "makeQuestionPageAs: exam");
                 break;
             default:

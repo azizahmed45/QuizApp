@@ -1,8 +1,10 @@
 package com.example.dell.quizapp;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ public class CustomActionBar {
     private ViewGroup submitView;
 
     private ViewGroup upButtonView;
+
+    private static final String TAG = "CustomActionBar";
 
     public CustomActionBar() {
 
@@ -62,8 +66,20 @@ public class CustomActionBar {
         submitView = view.findViewById(R.id.app_bar_submit_button);
     }
 
-    public CustomActionBar setTimer(String timerText) {
-        timerView.setText(timerText);
+    public CustomActionBar setTimer(int min) {
+        Log.d(TAG, "setTimer: set");
+        new CountDownTimer(min * 60 * 1000, 1000) {
+            @Override
+            public void onTick(long l) {
+                timerView.setText(l / 60000 + "min. " + (l % 60000) / 1000 + "sec");
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+
         return this;
     }
 

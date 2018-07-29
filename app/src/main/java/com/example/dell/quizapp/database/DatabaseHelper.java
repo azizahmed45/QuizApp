@@ -114,6 +114,14 @@ public class DatabaseHelper {
                             } else {
                                 Log.d(TAG, "onSuccess: Not enough questions");
                             }
+                            Log.d(TAG, "onSuccess: " + phy1.getResult().size() + " " +
+                                    phy2.getResult().size() + " " +
+                                    chem1.getResult().size() + " " +
+                                    chem2.getResult().size() + " " +
+                                    bio1.getResult().size() + " " +
+                                    bio2.getResult().size() + " " +
+                                    eng.getResult().size() + " " +
+                                    genK.getResult().size() + " ");
                             listener.onComplete(questions);
                         }
                     });
