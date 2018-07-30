@@ -1,5 +1,6 @@
 package com.example.dell.quizapp.database;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.example.dell.quizapp.quiz.Question;
@@ -33,6 +34,22 @@ public class DatabaseHelper {
         if (questionType == EXAM_QUESTION) {
 
             Log.d(TAG, "makeQuestions: Question collect start");
+
+            //countDown for debug
+            new CountDownTimer(120000, 1000) {
+                int i = 0;
+
+                @Override
+                public void onTick(long l) {
+                    i++;
+                    Log.d(TAG, "onTick: " + i);
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            }.start();
 
             final Task<QuerySnapshot> phy1 = questionRef.whereEqualTo("subjectId", 1).get();
             final Task<QuerySnapshot> phy2 = questionRef.whereEqualTo("subjectId", 2).get();

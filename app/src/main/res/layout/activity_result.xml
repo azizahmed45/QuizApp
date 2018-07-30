@@ -7,44 +7,55 @@
     android:padding="16dp"
     tools:context=".ResultActivity">
 
-
-    <TextView
-        android:id="@+id/correct_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Correct: 18"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/incorrect_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Incorrect: 16"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/unanswered_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Unanswered: 18"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/total_marks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Marks: 18"
-        android:textColor="#ff0000"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/answers_recycler_view"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/correct_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correct: 18"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/incorrect_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Incorrect: 16"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unanswered_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unanswered: 18"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/total_marks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Marks: 18"
+                android:textColor="#ff0000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/answers_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>

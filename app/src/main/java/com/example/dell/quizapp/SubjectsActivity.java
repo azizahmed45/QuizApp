@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class SubjectsActivity extends AppCompatActivity implements SubjectListAdapter.OnItemClickListener {
 
+    private static final String TAG = "SubjectsActivity";
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SubjectListAdapter adapter;
@@ -66,6 +67,7 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
         title = getIntent().getExtras().getString(DashboardActivity.INTENT_TITLE_TAG);
 
         questionType = getIntent().getExtras().getInt(BaseQuestionPageActivity.QUESTION_TYPE_KEY);
+        Log.d(TAG, "initialize: initializing finished");
 
     }
 
@@ -77,7 +79,7 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
         recyclerView.setAdapter(adapter);
 
         progressBar.setVisibility(View.GONE);
-        Log.d("Set subject: ", "Done");
+        Log.d(TAG, "Set subject done.");
     }
 
     private void getSubjects() {
@@ -92,13 +94,13 @@ public class SubjectsActivity extends AppCompatActivity implements SubjectListAd
                                 subjectList.add(documentSnapshot.getString("name"));
                                 subjectIds.add(documentSnapshot.getId());
                                 subjectFieldIds.add(documentSnapshot.getLong("id").intValue());
-                                Log.d("Subjects: ", documentSnapshot.getString("name"));
+                                Log.d(TAG, "Subjects" + documentSnapshot.getString("name"));
                             }
 
                             setSubjects();
 
                         } else {
-                            Log.d("subject list", "Failed");
+                            Log.d(TAG, "Subjects loading failed.");
                         }
                     }
                 });

@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.dell.quizapp.database.DatabaseHelper;
 import com.example.dell.quizapp.quiz.Question;
-import com.example.dell.quizapp.quiz.QuestionList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -120,7 +119,7 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
         bookmarkIcon = findViewById(R.id.bookmark_icon);
 
-        questions = new QuestionList<>();
+        questions = new ArrayList<>();
 
         getIntentExtras();
     }
