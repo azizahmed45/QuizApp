@@ -2,15 +2,26 @@ package com.example.dell.quizapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     public static String INTENT_TITLE_TAG = "title";
+
+    private static final String TAG = "DashboardActivity";
 
     private FirebaseAuth mAuth;
 
@@ -21,24 +32,48 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private CardView scoreCardView;
     private CardView forumCardView;
 
+    private DrawerLayout navigationDrawer;
+
+    private NavigationView navigationView;
+
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         initialize();
+
+        setNavigationDrawer();
+
+        setSupportActionBar(toolbar);
     }
 
-    private void checkLogin() {
-        if (mAuth.getCurrentUser() == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                navigationDrawer.openDrawer(GravityCompat.START);
+                Log.d(TAG, "onOptionsItemSelected: Open drawer");
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
+
+
+    private void setNavigationDrawer() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, navigationDrawer, toolbar, R.string.drawer_close, R.string.drawer_open);
+
+        navigationDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
 
     private void initialize() {
         mAuth = FirebaseAuth.getInstance();
-        checkLogin();
 
         studyCardView = findViewById(R.id.cardview_study);
         studyCardView.setOnClickListener(this);
@@ -57,6 +92,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         forumCardView = findViewById(R.id.cardview_forum);
         forumCardView.setOnClickListener(this);
+
+        navigationDrawer = findViewById(R.id.drawer_layout);
+
+        navigationView = findViewById(R.id.navigation_view);
+
+        toolbar = findViewById(R.id.toolbar);
     }
 
 
@@ -91,4 +132,23 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+            navigationDrawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_out:
+                mAuth.signOut();
+                Log.d(TAG, "onOptionsItemSelected: sign out clicked");
+                break;
+        }
+        return true;
+    }
 }

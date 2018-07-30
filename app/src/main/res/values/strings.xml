@@ -17,4 +17,7 @@
     <string name="study">Study</string>
     <string name="practice">Practice</string>
     <string name="answer">Answer</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="drawer_close">Drawer close</string>
+    <string name="drawer_open">Drawer open</string>
 </resources>

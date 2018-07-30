@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity" />
+        <activity
+            android:name=".DashboardActivity"
+            android:theme="@style/Theme21.NoActionBar" />
         <activity android:name=".SubjectsActivity" />
         <activity android:name=".ChaptersActivity" />
         <activity android:name=".BaseQuestionPageActivity" />
