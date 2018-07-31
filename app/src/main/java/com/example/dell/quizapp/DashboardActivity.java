@@ -1,6 +1,7 @@
 package com.example.dell.quizapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.example.dell.quizapp.database.DatabaseHelper;
+import com.example.dell.quizapp.models.Profile;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener,
@@ -31,6 +35,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private CardView questionBankCardView;
     private CardView scoreCardView;
     private CardView forumCardView;
+
+    private SharedPreferences profileInfoPref;
+
+    private TextView profileName;
+    private TextView profilePhone;
 
     private DrawerLayout navigationDrawer;
 
@@ -98,6 +107,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         navigationView = findViewById(R.id.navigation_view);
 
         toolbar = findViewById(R.id.toolbar);
+
+        profileName = navigationView.getHeaderView(0).findViewById(R.id.profile_name);
+        profilePhone = navigationView.getHeaderView(0).findViewById(R.id.profile_phone);
+
+        profileInfoPref = this.getSharedPreferences(getString(R.string.preference_profile_info_key), MODE_PRIVATE);
+
+
+
+
     }
 
 
@@ -151,4 +169,44 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         return true;
     }
+
+    private void setProfile() {
+
+        if (profileInfoPref.contains(getString(R.string.pref_profile_name_key)) && profileInfoPref.contains(getString(R.string.pref_profile_phone_key))) {
+
+            Log.d(TAG, "setProfile: Set profile from local");
+
+            profileName.setText(profileInfoPref.getString(getString(R.string.pref_profile_name_key), "No name"));
+            profilePhone.setText(profileInfoPref.getString(getString(R.string.pref_profile_phone_key), "No phone"));
+        } else {
+
+            DatabaseHelper databaseHelper = new DatabaseHelper();
+            databaseHelper.getProfile().setOnCompleteListener(new DatabaseHelper.OnCompleteListener<Profile>() {
+
+                @Override
+                public void onComplete(Profile profile) {
+                    Log.d(TAG, "onComplete: Profile collected");
+                    profileInfoPref.edit()
+                            .putString(getString(R.string.pref_profile_name_key), profile.getName())
+                            .putString(getString(R.string.pref_profile_phone_key), profile.getPhoneNumber())
+                            .apply();
+
+                    Log.d(TAG, "onComplete: Set profile from cloud");
+
+                    profileName.setText(profile.getName());
+                    profilePhone.setText(profile.getPhoneNumber());
+                }
+            });
+        }
+
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        setProfile();
+    }
+
 }

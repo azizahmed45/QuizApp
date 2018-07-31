@@ -18,7 +18,7 @@
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aziz Ahmed"
+        android:text="Default Name"
         android:textColor="#ffffff"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
         android:id="@+id/profile_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+8801682988300"
+        android:text="+880123456789"
         android:textColor="#ffffff"
         android:textSize="16sp" />
 

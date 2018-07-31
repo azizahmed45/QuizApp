@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dell.quizapp.quiz.Question;
+import com.example.dell.quizapp.models.Question;
 
 import java.util.ArrayList;
 

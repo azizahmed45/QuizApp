@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.dell.quizapp.quiz.Question;
+import com.example.dell.quizapp.models.Question;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

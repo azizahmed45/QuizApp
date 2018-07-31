@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.dell.quizapp.database.DatabaseHelper;
-import com.example.dell.quizapp.quiz.Question;
+import com.example.dell.quizapp.models.Question;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -180,7 +180,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         } else if (questionType == QUESTION_TYPE_EXAM) {
             DatabaseHelper dbHelp = new DatabaseHelper();
             dbHelp.makeQuestions(DatabaseHelper.EXAM_QUESTION)
-                    .setOnCompleteListener(new DatabaseHelper.OnCompleteListener() {
+                    .setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ArrayList<Question>>() {
+
                         @Override
                         public void onComplete(ArrayList<Question> q) {
                             questions = q;

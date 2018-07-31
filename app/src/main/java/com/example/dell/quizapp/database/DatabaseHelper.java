@@ -3,11 +3,15 @@ package com.example.dell.quizapp.database;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import com.example.dell.quizapp.quiz.Question;
+import com.example.dell.quizapp.models.Profile;
+import com.example.dell.quizapp.models.Question;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -20,6 +24,7 @@ public class DatabaseHelper {
     public static final int EXAM_QUESTION = 1;
     private static final String TAG = "DatabaseHelper";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private CollectionReference questionRef = db.collection("Questions");
     private OnCompleteListener listener;
 
@@ -146,11 +151,30 @@ public class DatabaseHelper {
         return this;
     }
 
+    public DatabaseHelper getProfile() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        DocumentReference profileRef = db.document("Users/" + user.getUid());
+
+        profileRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Log.d(TAG, "onEvent: Loading profile from cloud");
+                Profile profile = new Profile();
+                profile.setName(documentSnapshot.get("name").toString());
+                profile.setPhoneNumber(documentSnapshot.get("phone").toString());
+
+                listener.onComplete(profile);
+            }
+        });
+
+        return this;
+    }
+
     public void setOnCompleteListener(OnCompleteListener listener) {
         this.listener = listener;
     }
 
-    public interface OnCompleteListener {
-        void onComplete(ArrayList<Question> questions);
+    public interface OnCompleteListener<T> {
+        void onComplete(T var);
     }
 }

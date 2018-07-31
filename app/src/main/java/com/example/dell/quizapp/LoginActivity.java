@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.dell.quizapp.services.FirebaseService;
+import com.example.dell.quizapp.services.ApplicationService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
-        FirebaseService.loginActivityRunning = true;
+        ApplicationService.loginActivityRunning = true;
 
         if(mAuth.getCurrentUser() != null){
             updateUi(mAuth.getCurrentUser());
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
-        FirebaseService.loginActivityRunning = false;
+        ApplicationService.loginActivityRunning = false;
         super.onDestroy();
     }
 

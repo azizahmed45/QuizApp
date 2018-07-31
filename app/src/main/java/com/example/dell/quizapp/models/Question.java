@@ -1,4 +1,4 @@
-package com.example.dell.quizapp.quiz;
+package com.example.dell.quizapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
