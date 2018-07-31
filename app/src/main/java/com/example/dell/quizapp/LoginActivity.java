@@ -136,18 +136,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUi(FirebaseUser user){
         if(user != null){
-            mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if (firebaseAuth.getCurrentUser() == null) {
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        finish();
-                        Log.d(TAG, "onAuthStateChanged: Logged out");
-                    } else {
-                        Log.d(TAG, "onAuthStateChanged: Logged in");
-                    }
-                }
-            });
             Log.d(TAG, "Login success.");
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
