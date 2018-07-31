@@ -16,6 +16,8 @@ public class FirebaseService extends Application {
     public static FirebaseAuth firebaseAuth;
     public static FirebaseFirestore database;
 
+    public static boolean loginActivityRunning = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,7 +29,7 @@ public class FirebaseService extends Application {
         firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
+                if (firebaseAuth.getCurrentUser() == null && !loginActivityRunning) {
                     Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     logoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(logoutIntent);
