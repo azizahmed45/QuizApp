@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.dell.quizapp.database.DatabaseHelper;
 import com.example.dell.quizapp.services.ApplicationService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,8 +33,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private static final String TAG = "LoginActivity";
 
+    private static final int STATE_ALREADY_SIGNED_IN = 7;
+
     private EditText phoneNumberField;
     private EditText verificationCodeField;
+    private DatabaseHelper databaseHelper;
 
     private Button signInButton;
     private Button verifyButton;
@@ -54,14 +58,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final int STATE_VERIFICATION_SUCCESS = 4;
     private static final int STATE_SIGNIN_FAILED = 5;
     private static final int STATE_SIGNIN_SUCCESS = 6;
+    private EditText countryCodeField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        databaseHelper = new DatabaseHelper();
+
         phoneNumberField = findViewById(R.id.phoneNumberField);
         verificationCodeField = findViewById(R.id.verificationCodeField);
+        countryCodeField = findViewById(R.id.country_code);
 
         signInButton = findViewById(R.id.signInButton);
         verifyButton = findViewById(R.id.verifyButton);
@@ -94,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     Log.d(TAG, "Quota exceeded.");
                     Toast.makeText(LoginActivity.this, "Quota exceeded.", Toast.LENGTH_SHORT).show();
-                } else{
+                } else {
                     Log.d(TAG, "Verification failed unknown error.");
                     Toast.makeText(LoginActivity.this, "Verification failed unknown error.", Toast.LENGTH_SHORT).show();
                 }
@@ -123,14 +131,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         ApplicationService.loginActivityRunning = true;
 
-        if(mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null) {
             updateUi(mAuth.getCurrentUser());
-        }
-        else{
+        } else {
             updateUi(STATE_INITIALIZED);
         }
 
-        if(verificationInProgress && validPhoneNumber()){
+        if (verificationInProgress && validPhoneNumber()) {
             Log.d(TAG, "In a method in onStart");
             startPhoneNumberVerification(getPhoneNumber());
         }
@@ -143,17 +150,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onDestroy();
     }
 
-    private void updateUi(FirebaseUser user){
-        if(user != null){
-            Log.d(TAG, "Login success.");
-            startActivity(new Intent(this, DashboardActivity.class));
-            finish();
+    private void updateUi(FirebaseUser user) {
+        if (user != null) {
+
+            updateUi(STATE_ALREADY_SIGNED_IN);
+
+            databaseHelper.isProfileAdded(user)
+                    .setOnCompleteListener(new DatabaseHelper.OnCompleteListener<Boolean>() {
+
+                        @Override
+                        public void onComplete(Boolean profileAdded) {
+                            if (profileAdded) {
+                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, EditProfileActivity.class));
+                            }
+
+                            Log.d(TAG, "Login success.");
+                            finish();
+                        }
+                    });
         }
+
+
     }
 
 
     private void updateUi(int uiState) {
-        switch (uiState){
+        switch (uiState) {
             case STATE_INITIALIZED:
                 phoneNumberField.setVisibility(View.VISIBLE);
                 signInButton.setVisibility(View.VISIBLE);
@@ -178,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 new CountDownTimer(60000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        resendCodeButton.setText("Resend in " + millisUntilFinished / 1000 +" sec.");
+                        resendCodeButton.setText("Resend in " + millisUntilFinished / 1000 + " sec.");
                     }
 
                     public void onFinish() {
@@ -188,6 +212,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }.start();
 
                 break;
+            case STATE_ALREADY_SIGNED_IN:
+                phoneNumberField.setVisibility(GONE);
+                signInButton.setVisibility(GONE);
+                resendCodeButton.setVisibility(GONE);
+                verificationCodeField.setVisibility(GONE);
+                verifyButton.setVisibility(GONE);
+                countryCodeField.setVisibility(GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+
         }
     }
 
@@ -204,12 +238,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean validPhoneNumber() {
         String phoneNumber = phoneNumberField.getText().toString();
-        if(phoneNumber.isEmpty()){
+        if (phoneNumber.isEmpty()) {
             phoneNumberField.setError("Enter a Phone Number");
             phoneNumberField.requestFocus();
             return false;
         }
-        if(phoneNumber.length() != 11){
+        if (phoneNumber.length() != 11) {
             phoneNumberField.setError("Phone number must have 11 digits.");
             phoneNumberField.requestFocus();
             return false;
@@ -218,17 +252,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    private void signInWithPhoneAuthCredentials(PhoneAuthCredential phoneAuthCredential){
+    private void signInWithPhoneAuthCredentials(PhoneAuthCredential phoneAuthCredential) {
         mAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(GONE);
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             updateUi(mAuth.getCurrentUser());
-                        }
-                        else{
+                        } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 verificationCodeField.setError("Invalid code.");
                             }
@@ -259,10 +292,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.signInButton:
                 Log.d(TAG, "sign in button clicked");
-                if(!validPhoneNumber()){
+                if (!validPhoneNumber()) {
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -270,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.verifyButton:
                 String code = verificationCodeField.getText().toString();
-                if(code.isEmpty()){
+                if (code.isEmpty()) {
                     verificationCodeField.setError("Enter Code");
                     verificationCodeField.requestFocus();
                     return;
@@ -279,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 verifyPhoneNumberWithCode(verificationId, code);
                 break;
             case R.id.resendCodeButton:
-                if(validPhoneNumber()){
+                if (validPhoneNumber()) {
                     progressBar.setVisibility(View.VISIBLE);
                     resendVerificationCode(getPhoneNumber(), resendToken);
                 }
@@ -287,8 +320,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private String getPhoneNumber(){
-        String phoneNumber="+88"+phoneNumberField.getText().toString();
+    private String getPhoneNumber() {
+        String phoneNumber = "+88" + phoneNumberField.getText().toString();
         Log.d(TAG, "getPhoneNumber: " + phoneNumber);
         return phoneNumber;
     }

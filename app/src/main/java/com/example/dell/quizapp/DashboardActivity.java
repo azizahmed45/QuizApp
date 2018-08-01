@@ -17,8 +17,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.dell.quizapp.database.DatabaseHelper;
-import com.example.dell.quizapp.models.Profile;
+import com.example.dell.quizapp.models.ProfileInfo;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -114,8 +115,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         profileInfoPref = this.getSharedPreferences(getString(R.string.preference_profile_info_key), MODE_PRIVATE);
 
 
-
-
     }
 
 
@@ -171,6 +170,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setProfile() {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (profileInfoPref.contains(getString(R.string.pref_profile_name_key)) && profileInfoPref.contains(getString(R.string.pref_profile_phone_key))) {
 
@@ -181,20 +181,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         } else {
 
             DatabaseHelper databaseHelper = new DatabaseHelper();
-            databaseHelper.getProfile().setOnCompleteListener(new DatabaseHelper.OnCompleteListener<Profile>() {
+            databaseHelper.getProfileInfo().setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ProfileInfo>() {
 
                 @Override
-                public void onComplete(Profile profile) {
+                public void onComplete(ProfileInfo profile) {
                     Log.d(TAG, "onComplete: Profile collected");
                     profileInfoPref.edit()
                             .putString(getString(R.string.pref_profile_name_key), profile.getName())
-                            .putString(getString(R.string.pref_profile_phone_key), profile.getPhoneNumber())
+                            .putString(getString(R.string.pref_profile_phone_key), user.getPhoneNumber())
                             .apply();
 
                     Log.d(TAG, "onComplete: Set profile from cloud");
 
                     profileName.setText(profile.getName());
-                    profilePhone.setText(profile.getPhoneNumber());
+                    profilePhone.setText(user.getPhoneNumber());
                 }
             });
         }
@@ -203,8 +203,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
 
         setProfile();
     }

@@ -1,10 +1,12 @@
 package com.example.dell.quizapp.database;
 
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.dell.quizapp.models.Profile;
+import com.example.dell.quizapp.models.ProfileInfo;
 import com.example.dell.quizapp.models.Question;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -151,26 +153,83 @@ public class DatabaseHelper {
         return this;
     }
 
-    public DatabaseHelper getProfile() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        DocumentReference profileRef = db.document("Users/" + user.getUid());
 
-        profileRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    public DatabaseHelper getProfileInfo() {
+        String uid = firebaseAuth.getCurrentUser().getUid();
+        DocumentReference profileInfoRef = db.document("Users/" + uid + "/UserData/ProfileInfo");
+
+        profileInfoRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Log.d(TAG, "onEvent: Loading profile from cloud");
-                Profile profile = new Profile();
-                profile.setName(documentSnapshot.get("name").toString());
-                profile.setPhoneNumber(documentSnapshot.get("phone").toString());
+                ProfileInfo profileInfo;
+                if (documentSnapshot.exists()) {
+                    profileInfo = documentSnapshot.toObject(ProfileInfo.class);
 
-                listener.onComplete(profile);
+                    listener.onComplete(profileInfo);
+                } else {
+                    listener.onComplete(new ProfileInfo());
+                    Log.d(TAG, "onSuccess: ProfileInfo not exit");
+                }
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Failed loading profile");
+                    }
+                });
+
+        return this;
+    }
+
+    public DatabaseHelper setProfileInfo(ProfileInfo profileInfo) {
+        String uid = firebaseAuth.getCurrentUser().getUid();
+        DocumentReference profileInfoRef = db.document("Users/" + uid + "/UserData/ProfileInfo");
+
+        profileInfoRef.set(profileInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onComplete(true);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        listener.onComplete(false);
+                        Log.d(TAG, "onFailure: " + e.toString());
+                    }
+                });
+
+        return this;
+    }
+
+    public DatabaseHelper isProfileAdded(FirebaseUser user) {
+        final DocumentReference userDoc = FirebaseFirestore.getInstance()
+                .document("Users/" + user.getUid() + "/UserData/ProfileInfo");
+
+        userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    listener.onComplete(true);
+                } else {
+                    listener.onComplete(false);
+                }
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: failed to check profile");
             }
         });
 
         return this;
     }
 
-    public void setOnCompleteListener(OnCompleteListener listener) {
+    public <T> void setOnCompleteListener(OnCompleteListener<T> listener) {
         this.listener = listener;
     }
 
