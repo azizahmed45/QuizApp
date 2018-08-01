@@ -25,6 +25,7 @@
         <activity android:name=".BaseQuestionPageActivity" />
         <activity android:name=".ResultActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".QuestionBankActivity"></activity>
     </application>
 
 </manifest>

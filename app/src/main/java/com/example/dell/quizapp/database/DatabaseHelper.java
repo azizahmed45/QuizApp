@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.dell.quizapp.models.ProfileInfo;
 import com.example.dell.quizapp.models.Question;
+import com.example.dell.quizapp.models.QuestionBank;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -225,6 +227,31 @@ public class DatabaseHelper {
                         Log.d(TAG, "onFailure: failed to check profile");
             }
         });
+
+        return this;
+    }
+
+    public DatabaseHelper getQuestionYears() {
+        db.collection("QuestionBank")
+                .orderBy("id", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<QuestionBank> questionBanks = new ArrayList<>();
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            questionBanks.add(documentSnapshot.toObject(QuestionBank.class));
+                        }
+
+                        listener.onComplete(questionBanks);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Failed loading question years");
+                    }
+                });
 
         return this;
     }
