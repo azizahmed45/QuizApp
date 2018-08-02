@@ -37,16 +37,22 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
     public static final int QUESTION_TYPE_STUDY = 1;
     public static final int QUESTION_TYPE_PRACTICE = 2;
     public static final int QUESTION_TYPE_EXAM = 3;
+    public static final int QUESTION_TYPE_QUESTION_BANK = 4;
 
     public static final String SUBJECT_ID_KEY = "SUBJECT_ID";
     public static final String CHAPTER_ID_KEY = "CHAPTER_ID";
+    public static final String QUESTION_BANK_ID_KEY = "QUESTION_BANK_ID";
 
     private int questionType;
     private int subjectId;
     private int chapterId;
 
+    private int questionBankId;
+
     private FirebaseFirestore db;
     private CollectionReference questionsRef;
+
+    private DatabaseHelper databaseHelper;
 
     private boolean questionsLoaded = false;
     private int nowOnQuestionNumberAt = 0;
@@ -119,6 +125,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
 
         bookmarkIcon = findViewById(R.id.bookmark_icon);
 
+        databaseHelper = new DatabaseHelper();
+
         questions = new ArrayList<>();
 
         getIntentExtras();
@@ -130,6 +138,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
         if (questionType == QUESTION_TYPE_STUDY || questionType == QUESTION_TYPE_PRACTICE) {
             subjectId = getIntent().getExtras().getInt(SUBJECT_ID_KEY);
             chapterId = getIntent().getExtras().getInt(CHAPTER_ID_KEY);
+        } else if (questionType == QUESTION_TYPE_QUESTION_BANK) {
+            questionBankId = getIntent().getExtras().getInt(QUESTION_BANK_ID_KEY);
         }
 
     }
@@ -178,8 +188,8 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                         }
                     });
         } else if (questionType == QUESTION_TYPE_EXAM) {
-            DatabaseHelper dbHelp = new DatabaseHelper();
-            dbHelp.makeQuestions(DatabaseHelper.EXAM_QUESTION)
+
+            databaseHelper.makeQuestions(DatabaseHelper.EXAM_QUESTION)
                     .setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ArrayList<Question>>() {
 
                         @Override
@@ -192,6 +202,17 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                             //initialize arrayList for answer
                             givenAnswers = new String[questions.size()];
                             Log.d(TAG, " array size " + givenAnswers.length + " question size " + questions.size());
+                            startPractice();
+                        }
+                    });
+        } else if (questionType == QUESTION_TYPE_QUESTION_BANK) {
+            databaseHelper.getQuestionBankQuestion(questionBankId)
+                    .setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ArrayList<Question>>() {
+                        @Override
+                        public void onComplete(ArrayList<Question> q) {
+                            questions = q;
+                            progressBar.setVisibility(View.GONE);
+                            questionsLoaded = true;
                             startPractice();
                         }
                     });
@@ -275,6 +296,9 @@ public class BaseQuestionPageActivity extends AppCompatActivity implements View.
                 actionBar.setAsExam()
                         .setTimer(60);
                 setClickListenerOnOptions();
+                break;
+            case QUESTION_TYPE_QUESTION_BANK:
+                setAnswer();
                 break;
             default:
                 break;

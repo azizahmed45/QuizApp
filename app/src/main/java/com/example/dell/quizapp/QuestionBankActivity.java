@@ -1,5 +1,6 @@
 package com.example.dell.quizapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,7 +32,7 @@ public class QuestionBankActivity extends AppCompatActivity implements QuestionB
 
         databaseHelper = new DatabaseHelper();
 
-        databaseHelper.getQuestionYears().setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ArrayList<QuestionBank>>() {
+        databaseHelper.getQuestionBankYears().setOnCompleteListener(new DatabaseHelper.OnCompleteListener<ArrayList<QuestionBank>>() {
             @Override
             public void onComplete(ArrayList<QuestionBank> qBanks) {
                 questionBanks = qBanks;
@@ -44,6 +45,7 @@ public class QuestionBankActivity extends AppCompatActivity implements QuestionB
 
     private void setRecyclerView() {
         questionBankAdapter = new QuestionBankAdapter(questionBanks);
+        questionBankAdapter.setOnItemCLickListener(this);
 
         layoutManager = new GridLayoutManager(this, 2);
 
@@ -53,6 +55,10 @@ public class QuestionBankActivity extends AppCompatActivity implements QuestionB
 
     @Override
     public void onItemClick(int position) {
+        Intent questionBankIntent = new Intent(this, BaseQuestionPageActivity.class);
+        questionBankIntent.putExtra(BaseQuestionPageActivity.QUESTION_TYPE_KEY, BaseQuestionPageActivity.QUESTION_TYPE_QUESTION_BANK);
+        questionBankIntent.putExtra(BaseQuestionPageActivity.QUESTION_BANK_ID_KEY, questionBanks.get(position).getId());
 
+        startActivity(questionBankIntent);
     }
 }

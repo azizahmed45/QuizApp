@@ -231,7 +231,7 @@ public class DatabaseHelper {
         return this;
     }
 
-    public DatabaseHelper getQuestionYears() {
+    public DatabaseHelper getQuestionBankYears() {
         db.collection("QuestionBank")
                 .orderBy("id", Query.Direction.DESCENDING)
                 .get()
@@ -250,6 +250,31 @@ public class DatabaseHelper {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "onFailure: Failed loading question years");
+                    }
+                });
+
+        return this;
+    }
+
+    public DatabaseHelper getQuestionBankQuestion(int id) {
+        final ArrayList<Question> questions = new ArrayList<>();
+
+        db.collection("Questions")
+                .whereEqualTo("questionBankId", id)
+                .get()
+                .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                questions.add(documentSnapshot.toObject(Question.class));
+                            }
+
+                            listener.onComplete(questions);
+
+                        } else {
+                            listener.onComplete(new ArrayList<Question>());
+                        }
                     }
                 });
 

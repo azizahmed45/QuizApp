@@ -56,7 +56,10 @@ public class QuestionBankAdapter extends RecyclerView.Adapter<QuestionBankAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(getAdapterPosition());
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        listener.onItemClick(position);
+                    }
                 }
             });
         }
