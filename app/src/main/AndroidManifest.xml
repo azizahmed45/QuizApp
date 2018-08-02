@@ -3,6 +3,7 @@
     package="com.example.dell.quizapp">
 
     <application
+        android:name=".services.ApplicationService"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,10 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity" />
+        <activity
+            android:name=".DashboardActivity"
+            android:theme="@style/Theme21.NoActionBar" />
         <activity android:name=".SubjectsActivity" />
-        <activity android:name=".ChaptersActivity"></activity>
+        <activity android:name=".ChaptersActivity" />
         <activity android:name=".BaseQuestionPageActivity" />
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".QuestionBankActivity"></activity>
     </application>
 
 </manifest>

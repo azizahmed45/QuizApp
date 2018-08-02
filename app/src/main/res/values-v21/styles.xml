@@ -7,4 +7,10 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
     </style>
 
+    <style name="Theme21.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>

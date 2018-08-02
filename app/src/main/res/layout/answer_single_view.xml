@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_border_shape"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginVertical="8dp"
+    tools:context=".ResultActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/question_text_in_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_border_shape"
+            android:paddingBottom="5dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="25dp"
+            android:text="ejnfefiuenfiunefunfjneijfjnfnfeiejnfienfiueuefjnijefn"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/question_in_result"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rounded_border_shape"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="5dp"
+            android:text="@string/question"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/answer_text_in_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_border_shape"
+            android:paddingBottom="5dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="25dp"
+            android:text="ejnfefiuenfiunefunfjneijfjnfnfeiejnfienfiueuefjnijefn"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/answer_in_result"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rounded_border_shape"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="5dp"
+            android:text="@string/answer"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Correct"
+        android:textSize="20sp" />
+</LinearLayout>
